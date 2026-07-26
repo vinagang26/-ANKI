@@ -1,0 +1,305 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+#app {
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Screen visibility */
+.screen {
+    display: block;
+}
+
+.screen.hidden {
+    display: none;
+}
+
+/* Home screen */
+.home-stats {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.home-stats p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.home-stats strong {
+    font-size: 20px;
+    color: #0066cc;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #0066cc;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #0052a3;
+}
+
+.btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn.disabled:hover {
+    background-color: #ccc;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin: 0 5px;
+}
+
+.btn-small.edit {
+    background-color: #28a745;
+}
+
+.btn-small.edit:hover {
+    background-color: #218838;
+}
+
+.btn-small.delete {
+    background-color: #dc3545;
+}
+
+.btn-small.delete:hover {
+    background-color: #c82333;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 4px rgba(0, 102, 204, 0.3);
+}
+
+/* Library */
+.card-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.card-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #fafafa;
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-info strong {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.card-meaning {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.card-next-review {
+    font-size: 12px;
+    color: #999;
+    margin: 5px 0;
+}
+
+.card-actions {
+    white-space: nowrap;
+    margin-left: 15px;
+}
+
+/* Review screen */
+.card-display {
+    background-color: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card-front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.card-back {
+    text-align: center;
+}
+
+.card-hanzi {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.card-pinyin {
+    font-size: 20px;
+    color: #0066cc;
+    margin-bottom: 10px;
+}
+
+.card-meaning {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card-example {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-top: 15px;
+}
+
+.rating-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.rating-btn {
+    padding: 12px;
+    font-size: 14px;
+}
+
+.rating-btn.again {
+    background-color: #dc3545;
+}
+
+.rating-btn.again:hover {
+    background-color: #c82333;
+}
+
+.rating-btn.hard {
+    background-color: #fd7e14;
+}
+
+.rating-btn.hard:hover {
+    background-color: #e0680d;
+}
+
+.rating-btn.good {
+    background-color: #28a745;
+}
+
+.rating-btn.good:hover {
+    background-color: #218838;
+}
+
+.rating-btn.easy {
+    background-color: #20c997;
+}
+
+.rating-btn.easy:hover {
+    background-color: #1aa179;
+}
+
+.card-progress {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .card-hanzi {
+        font-size: 36px;
+    }
+
+    .card-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-actions {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+}
