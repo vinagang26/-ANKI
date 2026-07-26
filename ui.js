@@ -74,7 +74,7 @@ const ui = {
                 html += `
                     <li class="card-item">
                         <div class="card-info">
-                            <strong>${card.hanzi}</strong> (${card.pinyin})
+                            <strong>${card.hanzi}</strong> <span class="pinyin">(${card.pinyin})</span>
                             <p class="card-meaning">${card.meaning}</p>
                             <p class="card-next-review">Next review: ${nextReview}</p>
                         </div>
@@ -124,7 +124,12 @@ const ui = {
         cardForm.innerHTML = `
             <div class="form-group">
                 <label for="input-hanzi">Hanzi *</label>
-                <input type="text" id="input-hanzi" placeholder="e.g., 学习" value="${card ? card.hanzi : ''}" required>
+                <div class="input-with-indicator">
+                    <input type="text" id="input-hanzi" placeholder="e.g., 学习" value="${card ? card.hanzi : ''}" required>
+                    <div id="auto-fill-indicator" class="auto-fill-indicator hidden">
+                        <span class="spinner"></span> Filling...
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="input-pinyin">Pinyin *</label>
@@ -144,7 +149,12 @@ const ui = {
             </div>
         `;
 
-        // Attach event listeners (app.js will handle save/cancel)
+        // Attach event listeners
+        const hanziInput = document.getElementById('input-hanzi');
+        hanziInput.addEventListener('input', (e) => {
+            app.triggerAutoFill(e.target.value);
+        });
+
         document.getElementById('btn-form-save').addEventListener('click', () => {
             const formData = {
                 hanzi: document.getElementById('input-hanzi').value.trim(),
@@ -158,6 +168,21 @@ const ui = {
         document.getElementById('btn-form-cancel').addEventListener('click', () => {
             app.showScreen('home');
         });
+    },
+
+    /**
+     * Show or hide the auto-fill loading indicator.
+     * @param {boolean} isLoading - true to show, false to hide
+     */
+    showAutoFillLoading(isLoading) {
+        const indicator = document.getElementById('auto-fill-indicator');
+        if (!indicator) return;
+
+        if (isLoading) {
+            indicator.classList.remove('hidden');
+        } else {
+            indicator.classList.add('hidden');
+        }
     },
 
     /**

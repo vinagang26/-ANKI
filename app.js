@@ -4,6 +4,7 @@ const app = {
     currentScreen: 'home',
     currentReviewCard: null,
     reviewCardRevealed: false,
+    autoFillTimeout: null,
 
     /**
      * Initialize app on page load.
@@ -159,6 +160,79 @@ const app = {
     },
 
     /**
+     * Auto-fill Pinyin, Meaning, and Example from Hanzi using Claude API.
+     * Called when user finishes typing Hanzi (with debounce).
+     * @param {string} hanzi - Chinese text to analyze
+     */
+    async autoFillFromHanzi(hanzi) {
+        const query = hanzi ? hanzi.trim() : '';
+        if (!query) {
+            ui.showAutoFillLoading(false);
+            return;
+        }
+
+        // Show loading state
+        ui.showAutoFillLoading(true);
+
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&dt=rm&q=${encodeURIComponent(query)}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Translation API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            let meaning = '';
+            let pinyin = '';
+
+            if (data && data[0]) {
+                // Meaning is in data[0][0][0]
+                if (data[0][0] && data[0][0][0]) {
+                    meaning = data[0][0][0];
+                }
+                // Pinyin is in data[0][1][3] or data[0][0][3]
+                if (data[0][1] && data[0][1][3]) {
+                    pinyin = data[0][1][3];
+                } else if (data[0][0] && data[0][0][3]) {
+                    pinyin = data[0][0][3];
+                }
+            }
+
+            // Update form input fields if found
+            const pinyinInput = document.getElementById('input-pinyin');
+            const meaningInput = document.getElementById('input-meaning');
+
+            if (pinyinInput && pinyin) {
+                pinyinInput.value = pinyin;
+            }
+            if (meaningInput && meaning) {
+                meaningInput.value = meaning;
+            }
+
+            ui.showAutoFillLoading(false);
+        } catch (error) {
+            console.error('Auto-fill error:', error);
+            ui.showAutoFillLoading(false);
+        }
+    },
+
+    /**
+     * Debounced auto-fill trigger (called on Hanzi input change).
+     * @param {string} hanzi - Chinese text
+     */
+    triggerAutoFill(hanzi) {
+        // Clear previous timeout
+        clearTimeout(this.autoFillTimeout);
+
+        // Set new timeout (wait 400ms after user stops typing)
+        this.autoFillTimeout = setTimeout(() => {
+            this.autoFillFromHanzi(hanzi);
+        }, 400);
+    },
+
+    /**
      * Start a review session.
      * Load the first due card and show the review screen.
      */
@@ -225,7 +299,7 @@ const app = {
             // No more cards due
             this.currentReviewCard = null;
             ui.renderReview(dueCards, null, false);
-            
+
             // Add button to return home
             setTimeout(() => {
                 const reviewContent = document.getElementById('review-content');
