@@ -1,4 +1,4 @@
-const app = {
+﻿const app = {
     // State
     library: { decks: [], cards: {} },
     progress: {},
@@ -189,19 +189,33 @@ const app = {
         return [...learning, ...newCards, ...review];
     },
 
+    // --- Commit Helper ---
+
+    /**
+     * Re-read library+progress from the cache and re-render the library screen.
+     * Replace the 8x repeated: storage.X -> this.library = ... -> this.progress = ... -> ui.renderLibrary
+     */
+    commit() {
+        this.library = storage.getLibrary();
+        this.progress = storage.getProgress();
+        if (this.currentScreen === 'library') {
+            ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+        } else if (this.currentScreen === 'home') {
+            this.renderHome();
+        }
+    },
+
     // --- Deck Handlers ---
 
     createDeck({ name, author, description, language }) {
         const newDeck = storage.createDeck({ name, author, description, language });
-        this.library = storage.getLibrary();
         this.activeDeckId = newDeck.id;
-        ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+        this.commit();
     },
 
     updateDeck(deckId, updates) {
         storage.updateDeck(deckId, updates);
-        this.library = storage.getLibrary();
-        ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+        this.commit();
     },
 
     deleteDeck(deckId) {
@@ -216,7 +230,7 @@ const app = {
                 if (this.library.decks.length > 0) {
                     this.activeDeckId = this.library.decks[0].id;
                 }
-                ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+                this.commit();
             } catch (err) {
                 alert(err.message);
             }
@@ -226,8 +240,7 @@ const app = {
     moveCard(cardId, targetDeckId) {
         const success = storage.moveCard(cardId, targetDeckId);
         if (success) {
-            this.library = storage.getLibrary();
-            ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+            this.commit();
         }
     },
 
@@ -260,7 +273,7 @@ const app = {
         this.progress = storage.getProgress();
 
         if (this.currentScreen === 'library') {
-            ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+            this.commit();
         } else if (this.currentScreen === 'home') {
             this.renderHome();
         } else {
@@ -274,9 +287,7 @@ const app = {
 
         if (confirm(`Delete card "${cardContent.hanzi}"?`)) {
             storage.deleteCard(cardId);
-            this.library = storage.getLibrary();
-            this.progress = storage.getProgress();
-            ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+            this.commit();
         }
     },
 
@@ -333,9 +344,7 @@ const app = {
         if (!result) return;
 
         storage.saveLibrary(this.library);
-        this.library = storage.getLibrary();
-        this.progress = storage.getProgress();
-        ui.renderLibrary(this.library, this.progress, this.activeDeckId);
+        this.commit();
 
         if (result.newCardIds.length > 0) {
             alert(`Imported deck complete. Added ${result.newCardIds.length} new card${result.newCardIds.length === 1 ? '' : 's'}.`);
@@ -478,3 +487,4 @@ const app = {
 document.addEventListener('DOMContentLoaded', () => {
     app.init();
 });
+

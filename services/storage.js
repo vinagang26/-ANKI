@@ -1,4 +1,4 @@
-const storage = {
+﻿const storage = {
     STORAGE_KEY_LEGACY: 'chinese-vocab-cards',
     STORAGE_KEY_LIBRARY: 'chinese-vocab-library-v2',
     STORAGE_KEY_PROGRESS: 'chinese-vocab-progress-v2',
@@ -168,16 +168,21 @@ const storage = {
         this.syncToPython();
     },
 
-    syncToPython() {
-        if (window.pywebview && window.pywebview.api && window.pywebview.api.save_cards) {
-            try {
-                window.pywebview.api.save_cards({
-                    library: this.cachedLibrary,
-                    progress: this.cachedProgress
-                });
-            } catch (e) {
-                console.error('Failed to save to Python API:', e);
-            }
+    /**
+     * Sync current state to the Python-side cards.json.
+     * Returns a Promise so callers can optionally await it.
+     */
+    async syncToPython() {
+        if (!(window.pywebview && window.pywebview.api && window.pywebview.api.save_cards)) {
+            return;
+        }
+        try {
+            await window.pywebview.api.save_cards({
+                library: this.cachedLibrary,
+                progress: this.cachedProgress
+            });
+        } catch (e) {
+            console.error('[storage] Failed to sync to Python backend - data is safe in localStorage:', e);
         }
     },
 
@@ -339,4 +344,5 @@ const storage = {
         this.saveProgress(progress);
     }
 };
+
 

@@ -1,14 +1,6 @@
-(function () {
+﻿(function () {
     const FORMAT_VERSION = 1;
     const DECK_FILE_TYPE = 'chinese-anki-deck';
-
-    function createId() {
-        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
-            return window.crypto.randomUUID();
-        }
-
-        return `deck-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    }
 
     function sanitizeFileName(name) {
         return (name || 'deck')
@@ -75,7 +67,7 @@
                     resolve({
                         formatVersion: parsed.formatVersion || 1,
                         deck: {
-                            id: deck.id || createId(),
+                            id: deck.id || utils.generateId(),
                             name: deck.name || 'Imported Deck',
                             author: deck.author || 'User',
                             description: deck.description || '',
@@ -168,13 +160,13 @@
         }
 
         if (!deck) {
-            const importedDeckId = importedDeck.id || createId();
+            const importedDeckId = importedDeck.id || utils.generateId();
             deck = normalizedLibrary.decks.find(candidate => candidate.id === importedDeckId);
         }
 
         if (!deck) {
             const newDeck = {
-                id: importedDeck.id || createId(),
+                id: importedDeck.id || utils.generateId(),
                 name: importedDeck.name || 'Imported Deck',
                 author: importedDeck.author || 'User',
                 description: importedDeck.description || '',
@@ -259,3 +251,4 @@
         getActionDescriptions
     };
 })();
+

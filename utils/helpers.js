@@ -1,9 +1,13 @@
-const utils = {
+﻿const utils = {
     /**
-     * Generate a UUID v4-style ID.
-     * Not cryptographically secure, but sufficient for local app.
+     * Generate a cryptographically-secure UUID v4 via the Web Crypto API,
+     * with a Math.random fallback for ancient environments.
      */
     generateId() {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return window.crypto.randomUUID();
+        }
+        // Fallback: hand-rolled UUID v4
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
