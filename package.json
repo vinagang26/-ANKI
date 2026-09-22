@@ -4,11 +4,12 @@
     "description": "Chinese flashcard desktop app",
     "main": "main.js",
     "scripts": {
-        "dev": "electron .",
-        "build": "electron-builder"
+        "build": "echo \"No build step required for static web app\"",
+        "desktop:dev": "electron .",
+        "desktop:build": "electron-builder"
     },
-    "dependencies": {
-        "electron": "latest",
-        "electron-builder": "latest"
+    "devDependencies": {
+        "electron": "43.2.0",
+        "electron-builder": "26.15.3"
     }
 }
